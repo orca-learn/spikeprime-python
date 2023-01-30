@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"bungcip.better-toml",
+		"eamodio.gitlens",
+		"mhutchie.git-graph",
+		"ms-python.black-formatter",
+		"njpwerner.autodocstring",
+		"peterstaev.lego-spikeprime-mindstorms-vscode",
+		"redhat.vscode-yaml"
+	]
+}
+
