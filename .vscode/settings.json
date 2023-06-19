@@ -2,10 +2,11 @@
     "editor.rulers": [
         99
     ],
-    "python.formatting.provider": "black",
+    "python.formatting.provider": "none",
     "editor.formatOnSave": false,
     "[python]": {
         "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
     },
     "files.trimTrailingWhitespace": true,
     "python.analysis.extraPaths": [
