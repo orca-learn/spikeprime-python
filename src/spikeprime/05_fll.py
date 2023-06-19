@@ -14,6 +14,23 @@ class Robot:
         front_attachment_motor_port: str,
         back_attachment_motor_port: str,
     ) -> None:
+        """Initialize robot
+
+        This is the initialization method for a robot class. It takes in several parameters such
+        as the drive motor rotation ratio, motor and color sensor ports, and attachment motor
+        ports. It initializes various sensors and motors for the robot, such as the motion sensor,
+        motor pair, color sensors, and attachment motors. The drive motor rotation ratio is set
+        for the motor pair.
+
+        Args:
+            drive_motor_rotation_ratio (float): _description_
+            left_motor_port (str): _description_
+            right_motor_port (str): _description_
+            left_color_sensor_port (str): _description_
+            right_color_sensor_port (str): _description_
+            front_attachment_motor_port (str): _description_
+            back_attachment_motor_port (str): _description_
+        """
         self._motion_sensor = MotionSensor()
         self._drive_motors = MotorPair(left_motor_port, right_motor_port)
         self._drive_motor_rotation_ratio = drive_motor_rotation_ratio
@@ -27,11 +44,20 @@ class Robot:
         self._back_attachment_motor = Motor(back_attachment_motor_port)
 
     @property
-    def drive_motors(self):
+    def drive_motors(self) -> Motor:
         return self._drive_motors
 
     def move(self, distance_cm: float, speed: int = 75) -> None:
-        """Move straight for gyro sensor
+        """Command the robot to move
+
+        This function allows the robot to move straight using the gyro sensor. The distance to be
+        traveled in centimeters and the motor speed can be specified as arguments. The function
+        calculates the total degrees the motor needs to turn based on the distance and the motor's
+        rotation ratio. It then resets the yaw angle of the motion sensor and sets the degrees
+        counted by the left motor to zero. The motor to be used is determined based on the
+        direction of movement. The function continuously checks the degrees counted by the motor
+        and corrects the robot's direction using the motion sensor's yaw angle until the total
+        degrees are reached. Finally, the motors are stopped.
 
         Args:
             distance_cm (float): The distance in cm
@@ -53,6 +79,20 @@ class Robot:
         self._drive_motors.stop()
 
     def turn(self, degrees: float = 0, speed: int = 10) -> None:
+        """Command the robot to turn
+
+        This is a method that turns the robot a certain number of degrees at a given speed.
+        The method checks if the turn angle is within the valid range of -179 to 179 degrees.
+        If it is, the method resets the yaw angle sensor, sets the steering direction based on
+        the turn angle, and starts the drive motors at the given speed. The method then waits
+        until the robot has turned the desired number of degrees before stopping the drive motors.
+        If the turn angle is not within the valid range, the method prints an error message and
+        returns without performing the turn.
+
+        Args:
+            degrees (float, optional): The number of degrees to turn. Defaults to 0.
+            speed (int, optional): The speed of the drive motor. Defaults to 10.
+        """
         if degrees < -179 or degrees > 179:
             print("Turn angle must be between -179 and 179")
             return
@@ -66,8 +106,23 @@ class Robot:
     def follow_line(
         self, sensor: str, distance_cm: float = 0, to_intersection: bool = False, power: int = 35
     ) -> None:
-        total_degrees = round(abs(distance_cm) * 360 / self._drive_motor_rotation_ratio)
+        """Command the robot to follow a line
 
+        This function allows the robot to follow a line using a PID line follower algorithm. It
+        takes in the sensor to use for line following, the distance to travel in centimeters, a
+        boolean indicating whether to stop at an intersection or not, and the power to use for the
+        drive motors. The algorithm calculates the necessary correction to keep the robot on the
+        line and adjusts the power of the motors accordingly. If to_intersection is True, the
+        robot will stop at a black line detected by the stop_color_sensor. Otherwise, it will
+        stop once it has traveled the specified distance.
+
+        Args:
+            sensor (str): The sensor to use for line following
+            distance_cm (float, optional): The distance to travel in centimeters. Defaults to 0.
+            to_intersection (bool, optional): whether to stop at an intersection or not. Defaults to False.
+            power (int, optional): the power to use for the drive motors. Defaults to 35.
+        """
+        total_degrees = round(abs(distance_cm) * 360 / self._drive_motor_rotation_ratio)
         # Determine the color sensor to use for line following
         is_left_color_sensor = True if sensor.lower() == "left" else False
 
